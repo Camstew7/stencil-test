@@ -1,0 +1,11 @@
+
+// This size allows the page to be 1180 pixels wide, while also having 24 pixels
+// of padding on either side. Border-box sizing means the padding is calculated in
+// the width.
+$page-width--max: 1180px + ($flux-spacing-6 * 2);
+$content-card-padding: $flux-spacing-6;
+
+// Breakpoints
+$breakpoint-lg: 960px;
+$breakpoint-md: 760px;
+$breakpoint-sm: 640px;

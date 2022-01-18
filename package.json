@@ -1,0 +1,95 @@
+{
+  "name": "@meltwater/{{REPO-NAME}}",
+  "author": "{{YOUR TEAM}}",
+  "version": "0.0.1",
+  "description": "{{ DESCRIPTION }}",
+  "main": "dist/index.js",
+  "es2015": "dist/esm/index.mjs",
+  "es2017": "dist/esm/index.mjs",
+  "collection": "dist/collection/collection-manifest.json",
+  "collection:main": "dist/collection/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/types/components.d.ts",
+  "files": [
+    "dist/",
+    "docs/"
+  ],
+  "mpkg": [
+    "dist/**/*",
+    "docs/**/*"
+  ],
+  "scripts": {
+    "build": "npm run generate-build-dependencies && stencil build --prod --es5",
+    "start": "export ENV=LOCAL && npm run generate-build-dependencies && stencil build --dev --watch --serve --port 3000",
+    "start:ie": "export ENV=LOCAL && npm run generate-build-dependencies && stencil build --dev --es5 --watch --serve --port 3000",
+    "test": "npm run generate-build-dependencies && stencil test --spec",
+    "test:e2e": "npm run generate-build-dependencies && stencil test --e2e",
+    "test:watch": "npm run generate-build-dependencies && stencil test --spec --watchAll",
+    "generate": "stencil generate",
+    "generate-env-typings": "node scripts/generate-env-typings.js",
+    "generate-translations": "node scripts/generate-translations.js",
+    "generate-build-dependencies": "npm run generate-translations",
+    "generate-dependencies-md": "node scripts/generate-dependencies-md.js",
+    "pre-deploy": "npm run build",
+    "postinstall": "npm run generate-dependencies-md"
+  },
+  "bugs": {
+    "url": "https://github.com/meltwater/{{REPO-NAME}}/issues"
+  },
+  "homepage": "https://github.com/meltwater/{{REPO-NAME}}#readme",
+  "release": {
+    "branch": "master",
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
+      [
+        "@semantic-release/npm",
+        {
+          "npmPublish": true
+        }
+      ],
+      [
+        "@semantic-release/git",
+        {
+          "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+        }
+      ],
+      "@semantic-release/github"
+    ]
+  },
+  "dependencies": {
+    "@meltwater/flux-web-components": "^1.4.2",
+    "@meltwater/ia-mocks": "^1.1.1",
+    "@meltwater/mi-ia-tracking": "^1.0.2",
+    "@stencil/core": "^1.17.3",
+    "compare-versions": "^3.6.0",
+    "core-js": "^3.6.5",
+    "ejs": "^3.0.1"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@meltwater/flux-design-tokens": "^2.5.2",
+    "@meltwater/mi-manifest-client": "^1.4.0",
+    "@meltwater/node-translation": "^1.19.11",
+    "@semantic-release/changelog": "^5.0.0",
+    "@semantic-release/commit-analyzer": "^8.0.1",
+    "@semantic-release/git": "7.0.18",
+    "@stencil/sass": "^1.3.1",
+    "@types/jest": "^25.2.1",
+    "@types/node": "^12.12.21",
+    "@types/puppeteer": "2.0.1",
+    "jest": "26.0.1",
+    "jest-cli": "26.0.1",
+    "json-ts": "^1.6.4",
+    "jwt-decode": "^2.2.0",
+    "puppeteer": "2.1.1",
+    "semantic-release": "^15.14.0",
+    "workbox-build": "4.3.1",
+    "yargs": "^15.3.1"
+  },
+  "peerDependencies": {
+    "@meltwater/mi-manifest-client": ">= 1.4.x < 2",
+    "@meltwater/flux-web-components": ">= 1.4.1 < 2"
+  }
+}

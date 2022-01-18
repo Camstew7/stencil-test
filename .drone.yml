@@ -1,0 +1,97 @@
+kind: pipeline
+name: test_and_build
+# Here are a bunch of anchors for re-use in this pipeline (they exist only in the pipeline)
+node_img: &node_img
+    image: node:10.16.2
+push_master_only: &push_master_only
+  when:
+    event: [ push ]
+    branch: [ master ]
+name_vars: &name_vars export REPO_NAME={{REPO-NAME}}
+# end anchors
+steps:
+  - name: install
+    <<: *node_img
+    commands:
+      - echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN_RO" > .npmrc
+      - npm cache clear --force
+      - npm install
+    environment:
+      NPM_TOKEN_RO:
+        from_secret: npm_token_ro
+    when:
+      event:
+        - push
+        - pull_request
+
+  - name: test
+    <<: *node_img
+    commands:
+      - 'npm run build' # Ensure a prod build doesnt bork the next step on merge if it fails
+      - 'npm run test'
+    when:
+      event:
+        - push
+        - pull_request
+
+  - name: increment-version
+    image: meltwaterfoundation/drone-node:10-awscli
+    <<: *push_master_only
+    commands:
+      - echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN_WRITE" > .npmrc
+      - npm run build
+      - npx semantic-release
+      - (cat package.json | jq -r '.version') > .version
+    environment:
+      GH_TOKEN:
+        from_secret: gh_token
+      NPM_TOKEN_WRITE:
+        from_secret: npm_token_write
+
+  - name: mpkg-manual-deploy
+    image: meltwaterfoundation/drone-node:10-awscli
+    <<: *push_master_only
+    commands:
+      - *name_vars
+      - export VERSION=$(cat package.json | jq -r '.version')
+      - echo "Deploying version $VERSION to MPKG"
+      - >
+         export MANUAL_HOOK_RES=$(curl --location --request POST 'https://v1.mpkg.meltwater.io/npm/manualHook' --header 'Content-Type: application/json' --data-raw "{ \"packageName\": \"$REPO_NAME\", \"version\": \"$VERSION\" }")
+      - if [[ "$MANUAL_HOOK_RES" -ne "" ]]; then echo "Manual deploy to MPKG failed. Exiting"; exit 1; fi
+
+
+
+---
+kind: pipeline
+name: e2e-tests
+# Here are a bunch of anchors for re-use in this pipeline (they exist only in the pipeline)
+node_img: &node_img
+    image: meltwaterfoundation/drone-node10163
+cron_nightly_only: &cron_nightly_only
+  when:
+    event:
+      - cron
+    cron:
+      - e2e-nightly
+# end anchors
+steps:
+  - name: install
+    <<: *node_img
+    <<: *cron_nightly_only
+    commands:
+      - echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN_RO" > .npmrc
+      - npm cache clear --force
+      - npm install
+    environment:
+      NPM_TOKEN_RO:
+        from_secret: npm_token_ro
+
+  - name: e2e
+    <<: *node_img
+    <<: *cron_nightly_only
+    commands:
+      - npm run build # Ensure a prod build doesnt bork the next step on merge if it fails
+      - npm run test:e2e
+    environment:
+      NPM_TOKEN_RO:
+        from_secret: npm_token_ro

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Meltwater - {{REPO-NAME}} DEV DEMO</title>
+  <meta name="Description" content="{{REPO-NAME}}">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
+  <meta name="theme-color" content="#16161d">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="x-ua-compatible" content="IE=Edge">
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="https://app.meltwater.com/img/favicon.ico">
+
+  <link rel="stylesheet"
+    href="https://assets.meltwater.io/mpkg/flux-web-components/1.4.2/dist/flux-web-components/flux-web-components.css">
+
+  </script>
+
+
+</head>
+
+<body id="mw">
+
+  <mi-app-chrome>
+    <mi-app-chrome-content>
+      <div slot="content">
+        <div style="padding: 24px;">
+
+          <flux-card style="--padding: 16px; margin: 24px 0;">
+            <!-- PUT YOUR DEMO COMPONENT TAGS AND STUFFS IN HERE-->>
+          </flux-card>
+
+        </div>
+      </div>
+    </mi-app-chrome-content>
+
+  </mi-app-chrome>
+
+  <script>
+    // PUT SOME DEMO SCRIPTS YOU NEED HERE
+    function getCookie(cname) {
+      const name = `${cname}=`;
+      const decodedCookie = decodeURIComponent(document.cookie);
+      const ca = decodedCookie.split(';');
+      for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+          c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+          return c.substring(name.length, c.length);
+        }
+      }
+      return '';
+    }
+    // HERE IS YOUR TOKEN TO PASS INTO FETCHES YOU MAY NEED FOR DEMO DATA
+    const gydaToken = JSON.parse(getCookie('gydaToken')).token;
+
+  </script>
+
+  <script type="module" src="build/{{REPO-NAME}}.esm.js"></script>
+  <script nomodule src="build/{{REPO-NAME}}.js"></script>
+
+  <script src="https://assets.meltwater.io/mpkg/mi-manifest-client/1.3.6/build/main.js"></script>
+
+  <!---------- MomentJS ---------->
+  <script src="https://assets.meltwater.io/unpkg/moment@2.24.0/min/moment.min.js"></script>
+  <script
+    src="https://assets.meltwater.io/unpkg/moment-timezone@0.5.25/builds/moment-timezone-with-data-2012-2022.min.js">
+  </script>
+
+  <!---------- Identity Client ---------->
+  <script src="https://assets.meltwater.io/lib/gaf-identity-client/v2.1.0/main.js"></script>
+  <script src="https://assets.meltwater.io/lib/gaf-identity-client/v2.1.0/main.js" nomodule defer="defer"></script>
+
+  <!---------- Flux Components Core ---------->
+  <!-- Need these polyfills because of flux-dialogs in pre chromium edge -->
+  <script src="https://assets.meltwater.io/unpkg/@webcomponents/webcomponentsjs@2.4.3/webcomponents-loader.js"></script>
+  <script type="module"
+    src="https://assets.meltwater.io/mpkg/flux-web-components/1.4.2/dist/flux-web-components/flux-web-components.esm.js">
+  </script>
+  <script nomodule
+    src="https://assets.meltwater.io/mpkg/flux-web-components/1.4.2/dist/flux-web-components/flux-web-components.js">
+  </script>
+
+  <!---------- App Chrome ---------->
+  <script type="module"
+    src="https://assets.meltwater.io/mpkg/mi-app-chrome-module/latest/dist/mi-app-chrome-module/mi-app-chrome-module.esm.js">
+  </script>
+  <script nomodule
+    src="https://assets.meltwater.io/mpkg/mi-app-chrome-module/latest/dist/mi-app-chrome-module/mi-app-chrome-module.js">
+  </script>
+  <script type="module"
+    src="https://assets.meltwater.io/mi-header-module/staging/mi-header-module/mi-header-module.esm.js"></script>
+  <script nomodule src="https://assets.meltwater.io/mi-header-module/staging/mi-header-module/mi-header-module.js">
+  </script>
+  <script type="module"
+    src="https://assets.meltwater.io/mi-navigation-module/staging/mi-navigation-module/mi-navigation-module.esm.js">
+  </script>
+  <script nomodule=""
+    src="https://assets.meltwater.io/mi-navigation-module/staging/mi-navigation-module/mi-navigation-module.js">
+  </script>
+  <script type="module"
+    src="https://assets.meltwater.io/notifications/mi-notification-bell/staging/stable/mi-notification-bell/mi-notification-bell.esm.js">
+  </script>
+  <script nomodule=""
+    src="https://assets.meltwater.io/notifications/mi-notification-bell/staging/stable/mi-notification-bell/mi-notification-bell.js">
+  </script>
+
+
+</body>
+
+</html>
